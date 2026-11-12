@@ -1,0 +1,301 @@
+{
+    "apiVersion": 1,
+    "author": "itsgreat2misha",
+    "buttons": [
+        {
+            "description": "Run all enabled tasks now, whatever their schedule. A manual run does not mark boot tasks as run for this boot and does not move scheduled tasks' next runs.",
+            "group": "Advanced",
+            "id": "runNow",
+            "label": "Run now",
+            "title": "Run tasks now"
+        },
+        {
+            "description": "Clears Once per boot tracking and the record of scheduled tasks' past runs, so boot tasks run again on the next Kiosk start and scheduled tasks start their schedules fresh.",
+            "group": "Advanced",
+            "id": "clearSchedulerState",
+            "label": "Clear",
+            "title": "Clear scheduler state"
+        }
+    ],
+    "capabilities": [
+        "shizuku",
+        "entities"
+    ],
+    "commands": [
+        {
+            "id": "runNow",
+            "title": "Run all enabled tasks now"
+        }
+    ],
+    "description": "Run commands you choose on boot, when Kiosk Satellite starts, or on a schedule (every so often, daily, or weekly), through root (su) or Shizuku — or only when you run them yourself. Scheduled runs are best-effort while Kiosk Satellite is running, with a catch-up option for missed runs.",
+    "entryClass": "taskscheduler.TaskSchedulerPlugin",
+    "groups": [
+        {
+            "readings": [
+                "text_sensor.status",
+                "text_sensor.last_run",
+                "text_sensor.next_run"
+            ],
+            "readingsTitle": "Task Scheduler readings",
+            "title": "Tasks"
+        },
+        {
+            "title": "Advanced"
+        }
+    ],
+    "headless": true,
+    "icon": "icon.png",
+    "id": "ks-task-scheduler",
+    "license": "Apache-2.0",
+    "minAndroidSdk": 24,
+    "minAppVersion": "2026.10.40",
+    "name": "Task Scheduler",
+    "schemaVersion": 1,
+    "settings": [
+        {
+            "addTitle": "Add task",
+            "default": [],
+            "fields": [
+                {
+                    "key": "label",
+                    "required": true,
+                    "title": "Label",
+                    "type": "string"
+                },
+                {
+                    "key": "executable",
+                    "required": true,
+                    "title": "Executable",
+                    "type": "string"
+                },
+                {
+                    "default": "",
+                    "key": "args",
+                    "title": "Arguments",
+                    "type": "string"
+                },
+                {
+                    "default": "On boot",
+                    "key": "schedule",
+                    "options": [
+                        "On boot",
+                        "On Kiosk start",
+                        "Interval",
+                        "Daily",
+                        "Weekly",
+                        "Manual"
+                    ],
+                    "title": "Schedule",
+                    "type": "select"
+                },
+                {
+                    "default": 60,
+                    "input": "field",
+                    "key": "intervalMinutes",
+                    "max": 10080,
+                    "min": 5,
+                    "step": 1,
+                    "title": "Interval (Interval schedule only)",
+                    "type": "number",
+                    "unit": "min",
+                    "visibleWhen": {
+                        "key": "schedule",
+                        "notEquals": [
+                            "On boot",
+                            "On Kiosk start",
+                            "Daily",
+                            "Weekly",
+                            "Manual"
+                        ]
+                    }
+                },
+                {
+                    "default": "",
+                    "key": "timeOfDay",
+                    "title": "Time of day, HH:MM (Daily/Weekly only)",
+                    "type": "string",
+                    "visibleWhen": {
+                        "key": "schedule",
+                        "notEquals": [
+                            "On boot",
+                            "On Kiosk start",
+                            "Interval",
+                            "Manual"
+                        ]
+                    }
+                },
+                {
+                    "default": "Monday",
+                    "key": "weekday",
+                    "options": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday"
+                    ],
+                    "title": "Weekday (Weekly schedule only)",
+                    "type": "select",
+                    "visibleWhen": {
+                        "key": "schedule",
+                        "notEquals": [
+                            "On boot",
+                            "On Kiosk start",
+                            "Interval",
+                            "Daily",
+                            "Manual"
+                        ]
+                    }
+                },
+                {
+                    "default": "Catch up once",
+                    "key": "missedPolicy",
+                    "options": [
+                        "Catch up once",
+                        "Skip"
+                    ],
+                    "title": "If a scheduled run is missed",
+                    "type": "select",
+                    "visibleWhen": {
+                        "key": "schedule",
+                        "notEquals": [
+                            "On boot",
+                            "On Kiosk start",
+                            "Manual"
+                        ]
+                    }
+                },
+                {
+                    "default": 0,
+                    "input": "field",
+                    "key": "jitterMinutes",
+                    "max": 120,
+                    "min": 0,
+                    "step": 1,
+                    "title": "Jitter (scheduled runs only)",
+                    "type": "number",
+                    "unit": "min",
+                    "visibleWhen": {
+                        "key": "schedule",
+                        "notEquals": [
+                            "On boot",
+                            "On Kiosk start",
+                            "Manual"
+                        ]
+                    }
+                },
+                {
+                    "default": 0,
+                    "input": "field",
+                    "key": "delaySeconds",
+                    "max": 300,
+                    "min": 0,
+                    "step": 1,
+                    "title": "Delay",
+                    "type": "number",
+                    "unit": "s",
+                    "visibleWhen": {
+                        "key": "schedule",
+                        "notEquals": [
+                            "Manual"
+                        ]
+                    }
+                },
+                {
+                    "default": "Auto",
+                    "key": "backend",
+                    "options": [
+                        "Auto",
+                        "Root",
+                        "Shizuku"
+                    ],
+                    "title": "Backend",
+                    "type": "select"
+                },
+                {
+                    "default": 10,
+                    "input": "field",
+                    "key": "timeoutSeconds",
+                    "max": 30,
+                    "min": 1,
+                    "step": 1,
+                    "title": "Timeout",
+                    "type": "number",
+                    "unit": "s"
+                },
+                {
+                    "default": true,
+                    "key": "enabled",
+                    "title": "Enabled",
+                    "type": "boolean"
+                },
+                {
+                    "default": false,
+                    "key": "run",
+                    "title": "Run now",
+                    "type": "boolean"
+                }
+            ],
+            "group": "Tasks",
+            "key": "tasks",
+            "maxItems": 32,
+            "row": {
+                "subtitle": "schedule",
+                "title": "label"
+            },
+            "title": "Tasks",
+            "type": "list"
+        },
+        {
+            "default": "Informational",
+            "description": "How much detail Task Scheduler writes to the Kiosk Satellite log. Verbose adds the scheduling decisions behind each pass — why a task ran, waited or was skipped, the anchors it read and saved, backend probes and choices, and delay waits — for troubleshooting. It does not change what runs. Leave it on Informational normally.",
+            "group": "Advanced",
+            "key": "loggingLevel",
+            "options": [
+                "Informational",
+                "Verbose"
+            ],
+            "title": "Logging level",
+            "type": "select"
+        },
+        {
+            "default": "",
+            "description": "Managed by Task Scheduler. It records the Kiosk process id of the last start, so a plugin session restart in the same process does not run start/boot tasks again.",
+            "group": "Advanced",
+            "key": "sessionPid",
+            "title": "Session process id (managed by Task Scheduler)",
+            "type": "string",
+            "visibleWhen": {
+                "equals": "__never__",
+                "key": "loggingLevel"
+            }
+        },
+        {
+            "default": "",
+            "description": "Managed by Task Scheduler. It is hidden because editing it by hand is not needed; use Clear scheduler state instead.",
+            "group": "Advanced",
+            "key": "runState",
+            "title": "Run state (managed by Task Scheduler)",
+            "type": "string",
+            "visibleWhen": {
+                "equals": "__never__",
+                "key": "loggingLevel"
+            }
+        },
+        {
+            "default": "",
+            "description": "Managed by Task Scheduler. It records when each scheduled task was last accounted for — its last successful run, or a Skip resync that moved it past a missed run — so due times survive restarts. Use Clear scheduler state to reset it.",
+            "group": "Advanced",
+            "key": "schedulerState",
+            "title": "Scheduler state (managed by Task Scheduler)",
+            "type": "string",
+            "visibleWhen": {
+                "equals": "__never__",
+                "key": "loggingLevel"
+            }
+        }
+    ],
+    "version": "1.0.0"
+}

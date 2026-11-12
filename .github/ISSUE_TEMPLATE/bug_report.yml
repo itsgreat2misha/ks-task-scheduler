@@ -1,0 +1,49 @@
+name: Bug report
+description: A task did not run, ran wrongly, or the plugin misbehaved
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Remove any secrets (tokens, passwords)
+        from commands, logs and screenshots before posting — command
+        arguments are stored as plain settings and can appear in logs.
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      placeholder: "e.g. 1.2.1"
+    validations:
+      required: true
+  - type: input
+    id: ks-version
+    attributes:
+      label: Kiosk Satellite version
+      placeholder: "e.g. 2026.10.40"
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      options:
+        - Root (su)
+        - Shizuku
+        - Auto
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The task you ran (secrets removed), what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log excerpt
+      description: The Task Scheduler lines from the Kiosk Satellite log or the plugin status, with any secrets removed.
+    validations:
+      required: false

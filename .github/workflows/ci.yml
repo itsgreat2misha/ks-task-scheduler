@@ -1,0 +1,31 @@
+name: CI
+
+# build.yml is the release workflow (v* tag push / manual dispatch
+# only; it creates the release itself). This workflow gives every push and pull request build evidence:
+# unit tests plus a full plugin package build.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+      - name: Install Android build tools
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Test
+        run: python3 tools/test.py
+      - name: Build
+        run: python3 tools/build.py --android-platform 35
