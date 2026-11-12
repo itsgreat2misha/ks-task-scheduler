@@ -38,9 +38,9 @@ and add tasks.
 4. Enable **Task Scheduler** from its entry row, then open its
    settings and add tasks.
 
-This plugin is not yet listed in Community Plugins, so
-searching **Browse plugins** will not find it — install it
-with the button above or manually.
+Task Scheduler is listed in Community Plugins — you can
+also install it by searching **Browse plugins** in Plugin
+Manager.
 
 ## Uninstalling
 
@@ -318,7 +318,7 @@ python3 tools/build.py --android-platform 35
 ```
 
 The ZIP appears in `dist/`. To release: update the CHANGELOG
-and push a `v*` tag (for example `v1.0.0`); the Release
+and push a `v*` tag (for example `v1.0.1`); the Release
 workflow tests and builds the plugin and creates the GitHub
 release for the tag.
 
