@@ -38,7 +38,7 @@ class DevelopmentManifestShapeTest(unittest.TestCase):
         cls.manifest = json.loads(path.read_text())
 
     def test_version(self):
-        self.assertEqual(self.manifest['version'], '1.0.0')
+        self.assertEqual(self.manifest['version'], '1.0.1')
 
     def test_settings_order_and_anchor(self):
         settings = self.manifest['settings']
